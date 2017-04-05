@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Main {	
   private static String HELP = "-help";
   private static String RESET = "-reset";	
+  private static String EXIT = "-exit";
 	
   private static String WELCOME = "Welcome to Checkers!";
   private static String INTRO = "Starting new Game, type " + HELP
@@ -11,6 +12,7 @@ public class Main {
   private static String HELP_DISPLAY = 
     HELP + ": display list of commands\n" + 
     RESET + ": resets the board, and starts a new game\n" + 
+    EXIT + "quit app" + 
     "To make a move, input the square of the piece you want to move,\n" + 
     "then the square you want to move it to. For example:\n" + 
     "D6 E5\n" +
@@ -33,7 +35,9 @@ public class Main {
 		  System.out.println(b.toString());
 		  System.out.println(b.player() + TO_PLAY);
 		  String cmd = sc.nextLine();
-		  if (cmd.toLowerCase().contains(HELP.toLowerCase())){
+		  if (cmd.toLowerCase().contains(EXIT.toLowerCase())){
+			  break;
+		  } else if (cmd.toLowerCase().contains(HELP.toLowerCase())){
 			  System.out.printf(HELP_DISPLAY);
 		  } else if (cmd.toLowerCase().contains(RESET.toLowerCase())){
 			  System.out.println(RESET_DISPLAY);
@@ -44,10 +48,12 @@ public class Main {
 			    int[] si = new int[spaces.length * 2];
 			    for(int i = 0; i < spaces.length; i++){
 				  String s = spaces[i].toLowerCase();
-				  si[(i*2)] = (int) (s.charAt(0) - 1);
-				  si[(i*2) + 1] = ((int) s.charAt(1)) - 1;
+				  si[(i*2)] = (int) (s.charAt(0) - 'a');
+				  si[(i*2) + 1] = Character.getNumericValue(s.charAt(1)) - 1;
 			    }
-			    System.out.println(si.toString());
+			    //System.out.println(
+			    //  si.length + " " + si[0] + " " + si[1] + " " + si[2] + " " + si[3]
+			    //);
 			    if (spaces.length < 2){
 			    	System.out.println("Input too short!");
 			    }
@@ -65,10 +71,11 @@ public class Main {
 			    	}
 			    }
 			  } catch (IndexOutOfBoundsException e){
+				System.out.println(e);
 				System.out.println("Couldn't parse command. try again.");
 			  }
 		  }
 	  }
-
+      sc.close();
   }
 }

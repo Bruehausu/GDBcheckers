@@ -34,6 +34,10 @@ public class Board {
   
   //gets a piece on the board. returns null if empty 
   private Piece get(int x, int y){
+	  if (x < 0 || x >= SIDE_LEN || y < 0 || y >= SIDE_LEN){
+		  throw new ArrayIndexOutOfBoundsException(
+				   "tried to get x: " + x + " y: " + y);
+	  }
 	 return this.board[x + (SIDE_LEN * y)];
   }
   
@@ -48,18 +52,18 @@ public class Board {
   public String toString(){
 	  StringBuilder sb = new StringBuilder();
 	  for(int i = 0; i < SIDE_LEN; i++){
-		  sb.append((i+1) + " ");
+		  sb.append((i+1) + "  ");
 		  for(int j = SIDE_LEN-1; j >=0 ; j--){
 			  Piece p = this.get(j, i);
 			  if (p == null) {
-				  sb.append("  ");
+				  sb.append("   ");
 			  } else {
 				  sb.append(p.toString() + " ");
 			  }
 		  }
 		  sb.append("\n");
 	  }
-	  sb.append("  ");
+	  sb.append("   ");
 	  for(int j = SIDE_LEN-1; j >=0 ; j--){
 		  sb.append((char) (((int) 'A') + j));
 		  sb.append("  ");
@@ -118,8 +122,8 @@ public class Board {
   //sees if a piece can jump either way from (x,y)
   public boolean canJumpFrom(Color c, int x, int y){
 	  int off = (c==Color.R)?-2:2;
-	  return (canJump(c, x, y, x + 2, y + off) ||
-			  canJump(c, x, y, x - 2, y + off));
+	  return ((isValidSquare(x + 2, y + off) && canJump(c, x, y, x + 2, y + off)) ||
+			  (isValidSquare(x - 2, y + off) && canJump(c, x, y, x - 2, y + off)));
   }
   
   //checks if a jump command is valid
@@ -164,7 +168,7 @@ public class Board {
   
   private boolean anyCanJump(Color c){
 	  for(int i = 0; i < SIDE_LEN; i++){
-		  for(int j = 0; j < SIDE_LEN; i++){
+		  for(int j = 0; j < SIDE_LEN; j++){
 			  Piece p = get(i,j);
 			  if (p != null && p.get_color() == c &&
 					  canJumpFrom(c,i,j)) return true;
